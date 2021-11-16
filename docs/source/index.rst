@@ -1,5 +1,5 @@
-unWallet developer documents
-============================
+unWallet
+========
 
 **unWallet** is a non-custodial contract wallet that can be used via web browsers without installing native apps or browser extensions.
 Developers can integrate their Dapps with unWallet using `EIP1193`_-compliant :doc:`unWallet provider <unwallet-provider>`.
