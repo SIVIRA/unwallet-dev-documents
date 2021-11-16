@@ -1,2 +1,1 @@
-# unwallet-dev-documents
-unWallet developer documents
+# unWallet developer documents
