@@ -297,7 +297,7 @@ Parameters
 ^^^^^^^^^^
 
 #. ``DATA (20 Bytes)`` - address of the account that will sign the messages
-#. ``Object`` - JSON encoded `EIP712`_-compliant typed structured data to be signed
+#. ``String`` - JSON encoded `EIP712`_-compliant typed structured data to be signed
 
 Returns
 ^^^^^^^
