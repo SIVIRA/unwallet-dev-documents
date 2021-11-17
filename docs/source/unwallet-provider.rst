@@ -52,6 +52,13 @@ Sending RPC request
       ],
     });
 
+Disconnect from wallet
+----------------------
+
+.. code-block:: js
+
+    await provider.disable();
+
 
 Wrapping with other libraries
 =============================
@@ -66,8 +73,15 @@ ethers.js
     const web3Provider = new ethers.providers.Web3Provider(provider);
 
 
+.. _supported-rpc-methods:
+
 Supported RPC methods
 =====================
+
+.. note::
+
+    RPC methods other than the following are available by setting arbitrary RPC endpoints to the provider. See :ref:`configuration` for details.
+
 
 eth_requestAccounts
 -------------------
@@ -277,7 +291,7 @@ eth_signTypedData_v4
 
 .. note::
 
-    This method is provided for compatibility with MetaMask.
+    This method is provided for compatibility with `MetaMask`_.
 
 Parameters
 ^^^^^^^^^^
@@ -346,6 +360,47 @@ Example
       ],
     });
 
+
+.. _configuration:
+
+Configuration
+=============
+
+rpc
+---
+
+You can execute RPC methods other than :ref:`supported-rpc-methods` by setting arbitrary RPC endpoints to the provider as follows.
+
+.. code-block:: js
+
+    const provider = new UnWalletProvider({
+      rpc: {
+        // <CHAIN_ID>: "<ENDPOINT>",
+        1: "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+        137: "https://polygon-mainnet.infura.io/v3/YOUR_PROJECT_ID",
+      },
+    });
+
+    const count = await provider.request<string>({
+      method: "eth_getTransactionCount",
+      params: [
+        "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+      ],
+    });
+
+allowAccountsCaching
+--------------------
+
+If ``allowAccountsCaching`` option is ``true``, the provider caches information about the accounts in local storage so that you do not have to execute eth_requestAccounts each time you instantiate the provider.
+
+.. code-block:: js
+
+    const provider = new UnWalletProvider({
+      allowAccountsCaching: true,
+    });
+
+
 .. _EIP712: https://eips.ethereum.org/EIPS/eip-712
 .. _EIP1102: https://eips.ethereum.org/EIPS/eip-1102
 .. _EIP1193: https://eips.ethereum.org/EIPS/eip-1193
+.. _MetaMask: https://metamask.io
