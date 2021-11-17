@@ -40,14 +40,16 @@ Sending RPC request
 
     const txHash = await provider.request<string>({
       method: "eth_sendTransaction",
-      params: [{
-        "from": "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
-        "to": "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
-        "gas": "0x76c0",
-        "gasPrice": "0x9184e72a000",
-        "value": "0x9184e72a",
-        "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
-      }],
+      params: [
+        {
+          "from": "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
+          "to": "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
+          "gas": "0x76c0",
+          "gasPrice": "0x9184e72a000",
+          "value": "0x9184e72a",
+          "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
+        },
+      ],
     });
 
 
@@ -78,7 +80,7 @@ none
 Returns
 ^^^^^^^
 
-``Array`` of ``DATA (20 Bytes)`` - the addresses that the user approved to access
+``Array`` of ``DATA (20 Bytes)`` - addresses that the user approved to access
 
 Example
 ^^^^^^^
@@ -104,7 +106,7 @@ none
 Returns
 ^^^^^^^
 
-``Array`` of ``DATA (20 Bytes)`` - the addresses that the user approved to access
+``Array`` of ``DATA (20 Bytes)`` - addresses that the user approved to access
 
 Example
 ^^^^^^^
@@ -151,13 +153,13 @@ eth_sign
 Parameters
 ^^^^^^^^^^
 
-#. ``DATA (20 Bytes)`` - the address of the signer account
-#. ``DATA`` - the message to sign
+#. ``DATA (20 Bytes)`` - address of the account that will sign the message
+#. ``DATA`` - message to be signed
 
 Returns
 ^^^^^^^
 
-``DATA`` - The signature
+``DATA`` - signature
 
 Example
 ^^^^^^^
@@ -179,12 +181,131 @@ Example
 eth_signTypedData
 -----------------
 
-TODO
+Parameters
+^^^^^^^^^^
+
+#. ``DATA (20 Bytes)`` - address of the account that will sign the messages
+#. ``Object`` - `EIP712`_-compliant typed structured data to be signed
+
+Returns
+^^^^^^^
+
+``DATA`` - signature
+
+Example
+^^^^^^^
+
+.. code-block:: js
+
+    // Request
+    const sig = await provider.request<string>({
+      method: "eth_signTypedData",
+      params: [
+        "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+        {
+          types: {
+            EIP712Domain: [
+              {
+                name: "name",
+                type: "string",
+              },
+              {
+                name: "version",
+                type: "string",
+              },
+              {
+                name: "chainId",
+                type: "uint256",
+              },
+              {
+                name: "verifyingContract",
+                type: "address",
+              },
+            ],
+            Person: [
+              {
+                name: "name",
+                type: "string",
+              },
+              {
+                name: "wallet",
+                type: "address",
+              },
+            ],
+            Mail: [
+              {
+                name: "from",
+                type: "Person",
+              },
+              {
+                name: "to",
+                type: "Person",
+              },
+              {
+                name: "contents",
+                type: "string",
+              },
+            ],
+          },
+          primaryType: "Mail",
+          domain: {
+            name: "Ether Mail",
+            version: "1",
+            chainId: 1,
+            verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+          },
+          message: {
+            from: {
+              name: "Cow",
+              wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+            },
+            to: {
+              name: "Bob",
+              wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
+            },
+            contents: "Hello, Bob!",
+          },
+        },
+      ],
+    });
+
+    // Returns
+    "0x4355c47d63924e8a72e509b65029052eb6c299d53a04e167c5775fd466751c9d07299936d304c153f6443dfa05f40ff007d72911b6f72307f996231605b915621c"
 
 eth_signTypedData_v4
 --------------------
 
-TODO
+.. note::
+
+    This method is provided for compatibility with MetaMask.
+
+Parameters
+^^^^^^^^^^
+
+#. ``DATA (20 Bytes)`` - address of the account that will sign the messages
+#. ``Object`` - JSON encoded `EIP712`_-compliant typed structured data to be signed
+
+Returns
+^^^^^^^
+
+``DATA`` - signature
+
+Example
+^^^^^^^
+
+.. code-block:: js
+
+    // Request
+    const sig = await provider.request<string>({
+      method: "eth_signTypedData_v4",
+      params: [
+        "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+        `{"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],"Person":[{"name":"name","type":"string"},{"name":"wallet","type":"address"}],"Mail":[{"name":"from","type":"Person"},{"name":"to","type":"Person"},{"name":"contents","type":"string"}]},"primaryType":"Mail","domain":{"name":"Ether Mail","version":"1","chainId":1,"verifyingContract":"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"},"message":{"from":{"name":"Cow","wallet":"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826"},"to":{"name":"Bob","wallet":"0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB"},"contents":"Hello, Bob!"}}`,
+      ],
+    });
+
+    // Returns
+    "0x4355c47d63924e8a72e509b65029052eb6c299d53a04e167c5775fd466751c9d07299936d304c153f6443dfa05f40ff007d72911b6f72307f996231605b915621c"
 
 eth_sendTransaction
 -------------------
@@ -192,19 +313,19 @@ eth_sendTransaction
 Parameters
 ^^^^^^^^^^
 
-#. ``Object`` - the transaction object
+#. ``Object`` - transaction object
 
-  - ``from``: ``DATA (20 Bytes)`` - (optional) the address the transaction is send from
-  - ``to``: ``DATA (20 Bytes)`` - the address the transaction is directed to
+  - ``from``: ``DATA (20 Bytes)`` - (optional) address that the transaction is send from
+  - ``to``: ``DATA (20 Bytes)`` - address that the transaction is directed to
   - ``gas``: ``QUANTITY`` - (optional) integer of the gas provided for the transaction execution
   - ``gasPrice``: ``QUANTITY`` - (optional) integer of the gas price used for each paid gas
-  - ``value``: ``QUANTITY`` - (optional) integer of the value sent with this transaction
-  - ``data``: ``DATA`` - (optional) the hash of the invoked method signature and encoded parameters
+  - ``value``: ``QUANTITY`` - (optional) integer of the value sent with the transaction
+  - ``data``: ``DATA`` - (optional) hash of the invoked method signature and encoded parameters
 
 Returns
 ^^^^^^^
 
-``DATA (32 Bytes)`` - the transaction hash
+``DATA (32 Bytes)`` - transaction hash
 
 Example
 ^^^^^^^
@@ -213,16 +334,18 @@ Example
 
     const txHash = await provider.request<string>({
       method: "eth_sendTransaction",
-      params: [{
-        "from": "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
-        "to": "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
-        "gas": "0x76c0",
-        "gasPrice": "0x9184e72a000",
-        "value": "0x9184e72a",
-        "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
-      }],
+      params: [
+        {
+          "from": "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
+          "to": "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
+          "gas": "0x76c0",
+          "gasPrice": "0x9184e72a000",
+          "value": "0x9184e72a",
+          "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
+        },
+      ],
     });
 
-
+.. _EIP712: https://eips.ethereum.org/EIPS/eip-712
 .. _EIP1102: https://eips.ethereum.org/EIPS/eip-1102
 .. _EIP1193: https://eips.ethereum.org/EIPS/eip-1193
