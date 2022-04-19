@@ -391,6 +391,35 @@ Example
       ],
     });
 
+wallet_switchEthereumChain
+--------------------------
+
+.. note::
+
+    See also `EIP3326`_.
+
+#. ``Object``
+
+  - ``chainId``: integer ID of the chain as a hexadecimal string
+
+Returns
+^^^^^^^
+
+``null``
+
+Example
+^^^^^^^
+
+.. code-block:: js
+
+    await provider.request<null>({
+      method: "wallet_switchEthereumChain",
+      params: [
+        {
+          chainId: "0x1",
+        },
+      ],
+    });
 
 .. _configuration:
 
@@ -434,4 +463,5 @@ If ``allowAccountsCaching`` option is ``true``, the provider caches information 
 .. _EIP712: https://eips.ethereum.org/EIPS/eip-712
 .. _EIP1102: https://eips.ethereum.org/EIPS/eip-1102
 .. _EIP1193: https://eips.ethereum.org/EIPS/eip-1193
+.. _EIP3326: https://eips.ethereum.org/EIPS/eip-3326
 .. _MetaMask: https://metamask.io
